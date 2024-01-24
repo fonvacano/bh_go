@@ -23,7 +23,7 @@ func worker(ports, results chan int) {
 }
 
 func main() {
-	var workersNum = flag.Int("w", 1000, "Numbers or workers, which will scan ports")
+	var workersNum = flag.Int("w", 10000, "Numbers or workers, which will scan ports")
 	ports := make(chan int, *workersNum)
 	results := make(chan int)
 	var openports []int
