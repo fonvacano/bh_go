@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"net"
 	"sort"
@@ -22,10 +23,11 @@ func worker(ports, results chan int) {
 }
 
 func main() {
-	ports := make(chan int, 10000)
+	var workersNum = flag.Int("w", 1000, "Numbers or workers, which will scan ports")
+	ports := make(chan int, *workersNum)
 	results := make(chan int)
 	var openports []int
-	for i := 1; i <= cap(ports); i++ {
+	for i := 0; i < cap(ports); i++ {
 		go worker(ports, results)
 	}
 	go func() {
@@ -34,7 +36,7 @@ func main() {
 		}
 	}()
 
-	for i := 1; i <= 65535; i++ {
+	for i := 0; i < 65535; i++ {
 		port := <-results
 		if port != 0 {
 			openports = append(openports, port)
@@ -45,7 +47,7 @@ func main() {
 	close(results)
 	sort.Ints(openports)
 
-	for port := range openports {
+	for _, port := range openports {
 		fmt.Printf("%d is open\n", port)
 	}
 
