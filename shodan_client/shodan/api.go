@@ -29,5 +29,3 @@ func (c *Client) APIInfo() (*APIInfo, error) {
 	}
 	return &ret, nil
 }
-
-func (c *Client) HostSearch() {}
