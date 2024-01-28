@@ -3,12 +3,13 @@ package main
 import (
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/urfave/negroni"
 	"net/http"
 )
 
 func main() {
 	r := mux.NewRouter()
-
+	n := negroni.Classic()
 	r.HandleFunc("/hello", func(writer http.ResponseWriter, request *http.Request) {
 		_, fprintf := fmt.Fprintf(writer, "Hello man")
 		if fprintf != nil {
@@ -32,5 +33,7 @@ func main() {
 		}
 	}).Methods("GET")
 
-	http.ListenAndServe(":8080", r)
+	n.UseHandler(r)
+
+	http.ListenAndServe(":8080", n)
 }
